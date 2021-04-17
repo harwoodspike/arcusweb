@@ -82,14 +82,16 @@ app.use(vhost(host, staticApp));
 if (nconf.get('NODE_ENV') === 'production') {
   const configDestDir = `${ROOT}/build/dist/config`;
   if (!fs.existsSync(configDestDir)) {
-    fs.mkdirSync(configDestDir);
+    fs.mkdirSync(configDestDir, {'recursive': true});
   }
   fs.writeFileSync(`${configDestDir}/server.json`, fs.readFileSync(`${ROOT}/config/server.json`));
 }
 
 const server = https.createServer({
     requestCert: true,
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    key: fs.readFileSync( './bin/localhost.key' ),
+    cert: fs.readFileSync( './bin/localhost.cert' ),
 }, app).listen(port);
 
 server.on('error', (e) => {

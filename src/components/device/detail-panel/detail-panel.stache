@@ -36,33 +36,43 @@ limitations under the License.
   <h4>Wireless<br/>
   <small>{{#if device.product['product:protoFamily']}}{{device.product['product:protoFamily']}}{{else}}-{{/if}}</small></h4>
 
+  {{#if supportsTamper}}
+  <h4>Last Tamper<br/>
+    {{#if device['tamp:tamperchanged']}}
+      <small>{{format-date(device['tamp:tamperchanged'], 'MMM DD YYYY')}} {{format-time(device['tamp:tamperchanged'])}}</small>
+    {{else}}
+      <small>-</small>
+    {{/if}}
+  </h4>
+  {{/if}}
+
   {{#if device['web:dev:hasDetails']}}
     {{device-details(device}}
   {{/if}}
 
   <hr/>
+  {{^if isConfirmationShown}}
+    <button class="btn btn-cancel" ($click)="onPromptClick">
+      Remove Device
+    </button>
+  {{else}}
+    <div class="confirmation">
+      <p>Are you sure?</p>
+      {{#if confirmationText}}
+        <p>{{confirmationText}}</p>
+      {{/if}}
 
-  <div class="removal">
-    {{^if isConfirmationShown}}
-      <div>
-        <button class="btn btn-cancel" ($click)="onPromptClick">
-          Remove Device
-        </button>
-      </div>
-    {{else}}
-      <div class="confirmation">
-        <p>Are you sure?</p>
-        {{#if confirmationText}}
-          <p>{{confirmationText}}</p>
-        {{/if}}
-
-        <button class="btn btn-cancel" ($click)="onConfirmationClick">
-          Yes, Remove Device
-        </button>
-        <button class="btn cancel-remove" ($click)="onCancelConfirmationClick">
-          Cancel
-        </button>
-      </div>
-    {{/if}}
-  </div>
+      <button class="btn btn-cancel" ($click)="onConfirmationClick">
+        Yes, Remove Device
+      </button>
+      <button class="btn cancel-remove" ($click)="onCancelConfirmationClick">
+        Cancel
+      </button>
+    </div>
+  {{/if}}
+  {{#if supportsIdentification}}
+  <button type="button" class="btn identify" ($click)="onIdentifyClick">
+    Identify
+  </button>
+  {{/if}}
 </div>
